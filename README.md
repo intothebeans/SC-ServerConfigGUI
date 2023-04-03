@@ -6,4 +6,5 @@ This script is meant to run on startup to give an easy way to select the server 
 
 ### Planned Features
 - Add a small help menu
-- Increase the number of adjustable parameters
+- Add ability to add file paths to load samples
+- Ability to change buffers and other parameters
