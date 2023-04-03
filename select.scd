@@ -28,14 +28,14 @@
 				{b1.value = 0; text.string_("Remember to reboot the server to apply new settings");},
 				{val = drop.value;
 				b1.value = 1;
-				if (val != nil,{text.string_("Device Set to:\n" + drop.item); t.visible = true});});
+				if (val != nil,{text.string_("Device Set to:/n" + drop.item); t.visible = true});});
 
 
 		};
 
 		// code from https://raw.githubusercontent.com/musikinformatik/SuperDirt/develop/superdirt_startup.scd
 		b2.action = {
-			s.reboot;
+			s.killAll;
 			s.reboot( {
 				// server options are only updated on reboot
 				// configure the sound server: here you could add hardware specific options
@@ -77,7 +77,7 @@
 
 		}, {text.string_("There was an issue starting the server");});
 		};
-		b3.action = {if(s.serverRunning, {Server.killAll; b2.value = 0; b1.value = 0; t.visible = false;}, {t.visible = true; text.string_("Server is not running")});};
+		b3.action = {Server.killAll; b2.value = 0; b1.value = 0; t.visible = false;};
 
 
 		win.front;
