@@ -13,9 +13,16 @@
 		drop.items = o;
 
 		// create a box to toggle visibility on button clicks for alerts
-		t = CompositeView.new(win, Rect(10, 120, 430,300));
+		t = CompositeView.new(win, Rect(10, 140, 430,300));
 		t.visible = false;
 		text = StaticText.new(t, Rect(0,0, 425, 200)).font_(Font.new(Font.defaultMonoFace, 14, true, usePointSize: true)).stringColor_(Color.red);
+
+	// text field for changing the sample rate
+	StaticText.new(win, Rect(10, 80, 400, 60)).string_("Sampling Rate (Default 14400)").font_(Font.new(Font.defaultMonoFace, 10, true, usePointSize: true));
+	f = TextField.new(win, Rect(10, 120, 200, 30)).string_("14400");
+
+
+
 
 		// draw buttons
 		b1 = Button(win, Rect(10, 60, 60, 30)).states_([["Set",Color.black,Color.green], ["Reset"]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
@@ -47,13 +54,14 @@
 			s.options.numOutputBusChannels = 2; // set this to your hardware output channel size, if necessary
 			s.options.numInputBusChannels = 2; // set this to your hardware output channel size, if necessary
 			s.options.outDevice = drop.item;
+			s.options.sampleRate = f.value;
 			// boot the server and start SuperDirt
 			s.waitForBoot {
 				~dirt.stop; // stop any old ones, avoid duplicate dirt (if it is nil, this won't do anything)
 				~dirt = SuperDirt(2, s); // two output channels, increase if you want to pan across more channels
 				~dirt.loadSoundFiles;   // load samples (path containing a wildcard can be passed in)
 				// for example: ~dirt.loadSoundFiles("/Users/myUserName/Dirt/samples/*");
-				// s.sync; // optionally: wait for samples to be read
+				s.sync; // optionally: wait for samples to be read
 				~dirt.start(57120, 0 ! 12);   // start listening on port 57120, create two busses each sending audio to channel 0
 
 				// optional, needed for convenient access from sclang:
