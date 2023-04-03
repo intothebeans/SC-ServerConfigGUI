@@ -25,20 +25,20 @@
 
 
 		// draw buttons
-		b1 = Button(win, Rect(10, 60, 60, 30)).states_([["Set",Color.black,Color.green], ["Reset"]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
-		b2 = Button(win, Rect(100,60, 80, 30)).states_([["Boot", Color.black,Color.cyan], ["Reboot",Color.blue,Color.white]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
-		b3 = Button(win, Rect(210,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
+		// b1 = Button(win, Rect(10, 60, 60, 30)).states_([["Set",Color.black,Color.green], ["Reset"]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
+		b2 = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan], ["Reboot",Color.blue,Color.white]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
+		b3 = Button(win, Rect(110,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(Font.new(Font.defaultMonoFace, 12, true, usePointSize: true));
 
 		// button actions
-		b1.action = {
-			if(b1.value != 1,
-				{b1.value = 0; text.string_("Remember to reboot the server to apply new settings");},
-				{val = drop.value;
-				b1.value = 1;
-				if (val != nil,{text.string_("Device Set to:/n" + drop.item); t.visible = true});});
+		// b1.action = {
+		// 	if(b1.value != 1,
+		// 		{b1.value = 0; text.string_("Remember to reboot the server to apply new settings");},
+		// 		{val = drop.value;
+		// 		b1.value = 1;
+		// 		if (val != nil,{text.string_("Device Set to: " + drop.item); t.visible = true});});
 
 
-		};
+		// };
 
 		// code from https://raw.githubusercontent.com/musikinformatik/SuperDirt/develop/superdirt_startup.scd
 		b2.action = {
@@ -84,6 +84,7 @@
 
 
 			}, {text.string_("There was an issue starting the server");});
+		text.string_("Device Set to: " + drop.item); t.visible = true;
 		};
 		b3.action = {Server.killAll; b2.value = 0; b1.value = 0; t.visible = false;};
 
@@ -92,5 +93,3 @@
 	};
 	x.value();
 );
-
-
