@@ -6,5 +6,7 @@ This script is meant to run on startup to give an easy way to select the server 
 
 ### Planned Features
 - Add a small help menu
-- Add ability to add file paths to load samples
+- Add ability to remove sample paths and load samples while the server is running
 - Ability to change buffers and other parameters
+- Add ability to refresh audio device list without restarting
+
