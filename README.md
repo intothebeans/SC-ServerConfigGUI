@@ -7,5 +7,7 @@ The goal of this project is to make it easier for new users to get started with 
 ### Planned Features
 
 - Add a small help menu
-- Add ability to add file paths to load samples
+- Add ability to remove sample paths and load samples while the server is running
 - Ability to change buffers and other parameters
+- Add ability to refresh audio device list without restarting
+
