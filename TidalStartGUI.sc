@@ -1,50 +1,21 @@
-TidalStartGUI {
-	classvar samplePaths, device, sampleRate;
-
+TidalStartGUI : ServerConfigGUI {
 	*start {
+		var fileList, b3, b4, b5, samplePaths;
 		var path = Platform.userConfigDir +/+ "sc-sample-paths.save";
-		var win = Window.new("Select Device & Boot", Rect(200, 200, 750, 350),false);
-		// create a drop down menu with all the output devices
-	    var sampleRates = Dictionary.newFrom(["44.1kHz", 44100, "48kHz", 48000, "96kHz", 96000, "192kHz", 192000]);
-		var outMenu = PopUpMenu(win, Rect(10, 10, 400, 30)).resize_(2).font_(this.prDefaultFont(10, false));
-		// drop down for changing the sample rate
-		var srMenu = PopUpMenu(win, Rect(10, 100, 100, 30)).font_(this.prDefaultFont(10, true));
+		super.start(750);
 
-		// create a box to toggle visibility on button clicks for alerts
-		var msgBox = CompositeView.new(win, Rect(10, 140, 400,300));
-		var msgText = StaticText.new(msgBox, Rect(0,0, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);
+		fileList = ListView.new(super.win, Rect(300, 100, 425, 200)).selectionMode_(\none).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
 
-		// box to list file paths
-		var fileList = ListView.new(win, Rect(300, 100, 425, 200)).selectionMode_(\none).font_(this.prDefaultFont(10, false)).colors_(Color.yellow);
+		b3 = Button(super.win, Rect(300,60,140,30)).states_([["Add Path", Color.black, Color.green]]).font_(this.prDefaultFont(12, true));
+		b4 = Button(super.win, Rect(450, 60, 140, 30)).string_("Load Sounds").font_(this.prDefaultFont(12, true));
 
-		// draw buttons
-		var b1 = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan],["Reboot",Color.blue,Color.white]]).font_(this.prDefaultFont(12, true));
+		b5 = Button(super.win, Rect(600, 60, 125, 30)).states_([["Remove Path", Color.black, Color.fromHexString("#ef3939")]]).font_(this.prDefaultFont(12, true));
 
-		var b2 = Button(win, Rect(110,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(this.prDefaultFont(12, true));
-
-		var b3 = Button(win, Rect(300,60,140,30)).states_([["Add Path", Color.black, Color.green]]).font_(this.prDefaultFont(12, true));
-
-		// read data from save file
 		if(File.exists(path), {samplePaths = File.readAllString(path).split($;)});
-		samplePaths.postln;
 
-		msgBox.visible = false;
-
-		// store available output devices
+		this.msgBox.visible = false;
 		fileList.items = samplePaths;
-		outMenu.items = ServerOptions.outDevices;
-		srMenu.items = sampleRates.keys.asArray;
 
-
-		// button actions
-		b1.action = {
-			device = outMenu.item.asString;
-			sampleRate = sampleRates.at(srMenu.item);
-			try{this.prStartServer;}
-			{msgText.string_("Error starting the server.");};
-			msgText.string_("Device Set to: " + outMenu.item);
-			msgBox.visible = true;
-		};
 		b3.action = {
 			// open file dialog
 			FileDialog({ arg p;
@@ -59,17 +30,13 @@ TidalStartGUI {
 				f.close();
 			}, {"Dialog Cancelled".postln;}, 2, stripResult:true);
 		};
-		b2.action = {Server.killAll; b2.value = 0; b1.value = 0; msgBox.visible = false;};
 
-		win.front;
+		super.win.front;
 
 	}
+}
 
-	*prDefaultFont {arg size, em;
-		^Font.new(Font.defaultMonoFace, size, em, usePointSize: true);
-	}
-
-	*prStartServer {
+/*	*prStartServer {
 		var s = Server.default;
 		// code from https://raw.githubusercontent.com/musikinformatik/SuperDirt/develop/superdirt_startup.scd
 		if(s.serverRunning, {Server.killAll;});
@@ -108,6 +75,5 @@ TidalStartGUI {
 
 
 		}, {Exception("There was an issue starting the server");});
-	}
+	}*/
 
-}
