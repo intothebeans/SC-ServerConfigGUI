@@ -1,45 +1,44 @@
 ServerConfigGUI {
 	classvar win, msgBox, outDevice, sampleRate;
 
-	*start{arg winWidth = 100;
+	*start {arg winWidth = 500;
+
 		var sampleRates = Dictionary.newFrom(["44.1kHz", 44100, "48kHz", 48000, "96kHz", 96000, "192kHz", 192000]);
-		win = Window.new("Select Device & Boot", Rect(200, 200, winWidth, 350),false);
+		var outMenu, srMenu, msgText, bootButton, killButton;
+		win = Window.new("Select Device & Boot", Rect(200, 200, winWidth, 350), false);
 
-		// create a drop down menu with all the output devices
-		var outMenu = PopUpMenu(win, Rect(10, 10, 430, 30)).resize_(2).font_(this.prDefaultFont(10, false));
+		outMenu = PopUpMenu(win, Rect(10, 10, 430, 30)).resize_(2).font_(this.prDefaultFont(10, false));
 
-		// drop down for changing the sample rate
-		var label1 = StaticText.new(win, Rect(10, 15, 100, 200)).font_(this.prDefaultFont(10, false));
-		var srMenu = PopUpMenu(win, Rect(10, 125, 100, 30)).font_(this.prDefaultFont(10, true));
 
-		// create a box to toggle visibility on button clicks for alerts
-		msgBox = CompositeView.new(win, Rect(10, 140, 400,300));
-		var msgText = StaticText.new(msgBox, Rect(0,0, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);;
+		StaticText.new(win, Rect(10, 15, 100, 200)).font_(this.prDefaultFont(10, false)).string_("Sample Rate");
+		srMenu = PopUpMenu(win, Rect(10, 125, 100, 30)).font_(this.prDefaultFont(10, true));
 
-		// draw buttons
-		var b1 = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan],["Reboot",Color.blue,Color.white]]).font_(this.prDefaultFont(12, true));
+		msgBox = CompositeView.new(win, Rect(10, 180, 480, 150)).background_(Color.fromHexString("#a7a7a7"));
+		msgText = StaticText.new(msgBox, Rect(10, -75, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);
 
-		var b2 = Button(win, Rect(110,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(this.prDefaultFont(12, true));
-		msgBox.visible = false;
+		bootButton = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan],["Reboot",Color.blue,Color.white]]).font_(this.prDefaultFont(12, true));
 
-		// store available output devices
+		killButton = Button(win, Rect(110,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(this.prDefaultFont(12, true));
+
 		outMenu.items = ServerOptions.outDevices;
 		srMenu.items = sampleRates.keys.asArray;
 
-		// button actions
-		b1.action = {
+		bootButton.action = {
 			outDevice = outMenu.item.asString;
 			sampleRate = sampleRates.at(srMenu.item);
 			try{this.prStartServer;}
 			{msgText.string_("Error starting the server.");};
 			msgText.string_("Device Set to: " + outMenu.item);
-			msgBox.visible = true;
 		};
-		b2.action = {Server.killAll; b2.value = 0; b1.value = 0; msgBox.visible = false;};
+		killButton.action = {Server.default.ifRunning({
+			Server.killAll; killButton.value = 0; bootButton.value = 0; msgText.visible = false;
+
+		}, {msgText.string_("Server Not Running");});};
+		win.front;
 	}
 
-	*prDefaultFont {arg size, em;
-	^Font.new(Font.defaultMonoFace, size, em, usePointSize: true);
+	*prDefaultFont {arg size = 12, em = true;
+		^Font.new(Font.defaultMonoFace, size, em, usePointSize: true);
 	}
 
 	*prStartServer {

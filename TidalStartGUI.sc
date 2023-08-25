@@ -1,8 +1,8 @@
-TidalStartGUI : ServerConfigGUI {
-	*start {
+/*TidalStartGUI : ServerConfigGUI {
+	*init {
 		var fileList, b3, b4, b5, samplePaths;
 		var path = Platform.userConfigDir +/+ "sc-sample-paths.save";
-		super.start(750);
+		super.init(750);
 
 		fileList = ListView.new(super.win, Rect(300, 100, 425, 200)).selectionMode_(\none).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
 
@@ -34,7 +34,7 @@ TidalStartGUI : ServerConfigGUI {
 		super.win.front;
 
 	}
-}
+}*/
 
 /*	*prStartServer {
 		var s = Server.default;
