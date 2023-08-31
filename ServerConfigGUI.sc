@@ -1,10 +1,10 @@
 ServerConfigGUI {
-	classvar win, msgBox, outDevice, sampleRate;
+	classvar win, msgText, outDevice, sampleRate;
 
-	*start {arg winWidth = 500;
+	*start {arg winWidth = 500, boxWidth = 480;
 
 		var sampleRates = Dictionary.newFrom(["44.1kHz", 44100, "48kHz", 48000, "96kHz", 96000, "192kHz", 192000]);
-		var outMenu, srMenu, msgText, bootButton, killButton;
+		var outMenu, srMenu, msgBox, bootButton, killButton;
 		win = Window.new("Select Device & Boot", Rect(200, 200, winWidth, 350), false);
 
 		outMenu = PopUpMenu(win, Rect(10, 10, 430, 30)).resize_(2).font_(this.prDefaultFont(10, false));
@@ -13,8 +13,8 @@ ServerConfigGUI {
 		StaticText.new(win, Rect(10, 15, 100, 200)).font_(this.prDefaultFont(10, false)).string_("Sample Rate");
 		srMenu = PopUpMenu(win, Rect(10, 125, 100, 30)).font_(this.prDefaultFont(10, true));
 
-		msgBox = CompositeView.new(win, Rect(10, 180, 480, 150)).background_(Color.fromHexString("#a7a7a7"));
-		msgText = StaticText.new(msgBox, Rect(10, -75, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);
+		msgBox = CompositeView.new(win, Rect(10, 180, boxWidth, 150)).background_(Color.fromHexString("#a7a7a7"));
+		msgText = StaticText.new(msgBox, Rect(10, -80, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);
 
 		bootButton = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan],["Reboot",Color.blue,Color.white]]).font_(this.prDefaultFont(12, true));
 
@@ -28,7 +28,7 @@ ServerConfigGUI {
 			sampleRate = sampleRates.at(srMenu.item);
 			try{this.prStartServer;}
 			{msgText.string_("Error starting the server.");};
-			msgText.string_("Device Set to: " + outMenu.item);
+			win.name_("Device Set to: " + outDevice);
 		};
 		killButton.action = {Server.default.ifRunning({
 			Server.killAll; killButton.value = 0; bootButton.value = 0; msgText.visible = false;
