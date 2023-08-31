@@ -13,9 +13,6 @@ ServerConfigGUI {
 		StaticText.new(win, Rect(10, 15, 100, 200)).font_(this.prDefaultFont(10, false)).string_("Sample Rate");
 		srMenu = PopUpMenu(win, Rect(10, 125, 100, 30)).font_(this.prDefaultFont(10, true));
 
-		msgBox = CompositeView.new(win, Rect(10, 180, boxWidth, 150)).background_(Color.fromHexString("#a7a7a7"));
-		msgText = StaticText.new(msgBox, Rect(10, -80, 425, 200)).font_(this.prDefaultFont(14, true)).stringColor_(Color.red);
-
 		bootButton = Button(win, Rect(10,60, 80, 30)).states_([["Boot", Color.black,Color.cyan],["Reboot",Color.blue,Color.white]]).font_(this.prDefaultFont(12, true));
 
 		killButton = Button(win, Rect(110,60,120,30)).states_([["Kill Switch", Color.black, Color.red]]).font_(this.prDefaultFont(12, true));
@@ -27,13 +24,13 @@ ServerConfigGUI {
 			outDevice = outMenu.item.asString;
 			sampleRate = sampleRates.at(srMenu.item);
 			try{this.prStartServer;}
-			{msgText.string_("Error starting the server.");};
-			win.name_("Device Set to: " + outDevice);
+			{this.prMessageBox("Error starting the server.");};
+			win.name_("Device: " + outDevice);
 		};
 		killButton.action = {Server.default.ifRunning({
-			Server.killAll; killButton.value = 0; bootButton.value = 0; msgText.visible = false;
+			Server.killAll; killButton.value = 0; bootButton.value = 0;
 
-		}, {msgText.string_("Server Not Running");});};
+		}, {this.prMessageBox("Server Isn't Running");});};
 		win.front;
 	}
 
@@ -58,6 +55,14 @@ ServerConfigGUI {
 
 
 		}, {Exception("There was an issue starting the server");});
+	}
+
+	*prMessageBox { arg msg;
+		var box = win.bounds;
+		var w = Window.new("Warning", Rect(box.left + (box.width / 2) - 225, box.top + (box.height / 2), 450, 100), false).alwaysOnTop_(true);
+		StaticText.new(w, Rect(10, 10, 430, 80)).string_(msg).font_(this.prDefaultFont(26));
+		w.front();
+
 	}
 
 }
