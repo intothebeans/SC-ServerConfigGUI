@@ -16,11 +16,15 @@ TidalStartGUI : ServerConfigGUI {
 		fileList.items = samplePaths;
 
 		b3.action = {
-			// open file dialog
 			FileDialog({ arg p;
-				var f;
+				var f, paths;
 				if(samplePaths == nil, {samplePaths = [p ++ "/*"];},
-					{samplePaths = samplePaths.insert(0, (p ++ "/*"));});
+                   { // duplicate check
+                    paths = samplePaths.asString;
+                        if(paths.contains(p ++ "/*"), {super.prMessageBox("Duplicate Sample Path")},{
+                            samplePaths = samplePaths.insert(0, (p ++ "/*"));
+                        });
+                });
 				fileList.items_(samplePaths);
 				f = File.open(path, "w");
 				samplePaths.do({arg item, i;
@@ -44,7 +48,6 @@ TidalStartGUI : ServerConfigGUI {
             fileList.selection.collect({|index|
                 samplePaths.removeAt(index);
             });
-            samplePaths.postln;
             pathSaveFile = File.open(path, "w");
             samplePaths.do({arg item; pathSaveFile.write(item ++ ";");});
             fileList.items_(samplePaths);
