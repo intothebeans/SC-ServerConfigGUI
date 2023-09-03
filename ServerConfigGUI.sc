@@ -1,5 +1,5 @@
 ServerConfigGUI {
-	classvar win, msgText, outDevice, sampleRate;
+	classvar win, msgText, outDevice, sampleRate, buffs;
 
 	*start {arg winWidth = 500, boxWidth = 480;
 

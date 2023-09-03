@@ -5,14 +5,14 @@ TidalStartGUI : ServerConfigGUI {
 		var path = Platform.userConfigDir +/+ "sc-sample-paths.save";
 		super.start(750, 280);
 
-		fileList = ListView.new(win, Rect(300, 100, 425, 230)).selectionMode_(\none).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
+		fileList = ListView.new(win, Rect(300, 100, 425, 230)).selectionMode_(\extended).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
 
 		b3 = Button(win, Rect(300,60,140,30)).states_([["Add Path", Color.black, Color.green]]).font_(super.prDefaultFont);
 		b4 = Button(win, Rect(450, 60, 140, 30)).string_("Load Sounds").font_(super.prDefaultFont);
 		b5 = Button(win, Rect(600, 60, 125, 30)).states_([["Remove Path", Color.black, Color.fromHexString("#ef3939")]]).font_(super.prDefaultFont);
 
 		if(File.exists(path), {samplePaths = File.readAllString(path).split($;)}, {samplePaths = [];});
-
+        samplePaths.removeAt(samplePaths.size - 1);
 		fileList.items = samplePaths;
 
 		b3.action = {
@@ -29,6 +29,27 @@ TidalStartGUI : ServerConfigGUI {
 				f.close();
 			}, {"Dialog Cancelled".postln;}, 2, stripResult:true);
 		};
+
+        b4.action = {
+            if(~dirt != nil, {
+                samplePaths.do({|item| ~dirt.loadSoundFiles(item.asString);});},
+            {
+                super.prMessageBox("Super Dirt Not Running");
+            });
+
+        };
+
+        b5.action = {
+            var pathSaveFile;
+            fileList.selection.collect({|index|
+                samplePaths.removeAt(index);
+            });
+            samplePaths.postln;
+            pathSaveFile = File.open(path, "w");
+            samplePaths.do({arg item; pathSaveFile.write(item ++ ";");});
+            fileList.items_(samplePaths);
+
+        };
 
 	}
 	*prStartServer {
