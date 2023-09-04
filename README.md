@@ -1,3 +1,4 @@
+# **THERE IS CURRENTLY AN ISSUE WITH THE RELEASE I AM WORKING ON IT**
 # Server Configuration GUI
 
 This is a simple GUI for configuring the SuperCollider local server and SuperDirt for use with TidalCycles. The goal of this project is to make it easier for new users to get started with TidalCycles and SuperCollider.
