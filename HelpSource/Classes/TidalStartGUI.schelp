@@ -1,0 +1,12 @@
+TITLE::TidalStartGUI
+SUMMARY::A GUI for configuring basic server and SuperDirt settings
+
+CATEGORIES::Convenience, Server
+RELATED:: Classes/TidalStartGUI, Classes/SuperDirt
+
+DESCRIPTION::
+A GUI interface for starting and configuring the local server settings and SuperDirt settings.
+
+CLASSMETHODS::
+PRIVATE:: prStartServer,start
+COPYMETHOD:: ServerConfigGUI *start

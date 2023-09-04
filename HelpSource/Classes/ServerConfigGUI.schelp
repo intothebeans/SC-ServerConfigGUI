@@ -1,0 +1,15 @@
+TITLE::ServerConfigGUI
+SUMMARY::A GUI for configuring basic server settings
+
+CATEGORIES::Convenience, Server
+RELATED:: Classes/TidalStartGUI
+
+DESCRIPTION::
+A GUI interface for starting and configuring the local server settings.
+
+CLASSMETHODS::
+PRIVATE:: prStartServer, prMessageBox, prDefaultFont, prDraw
+METHOD::start
+DISCUSSION:: Evaluate this method to initialize the GUI.
+
+
