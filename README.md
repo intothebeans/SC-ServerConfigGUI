@@ -10,7 +10,7 @@ This is a simple GUI for configuring the SuperCollider local server and SuperDir
 
 ## Installation
 
-Clown or download the code, unzip the folder if necessary, and evaluate `Quarks.install("path/to/directory")` in SuperCollider.
+Clone or download the code, unzip the folder if necessary, and evaluate `Quarks.install("path/to/directory")` in SuperCollider.
 
 ## Bugs
 
