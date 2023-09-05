@@ -137,15 +137,15 @@ ServerConfigGUI {
 		if(s.serverRunning, {Server.killAll;});
 		s.reboot( {
 			// see http://doc.sccode.org/Classes/ServerOptions.html
-            s.options.numBuffers = settings["SampleBuffers"].postln;
-            s.options.memSize = settings["ServerMemory"].postln;
-            s.options.numWireBufs = settings["WireBuffers"].postln;
-            s.options.maxNodes = settings["ServerNodes"].postln;
-            s.options.numOutputBusChannels = settings["OutputBuffers"].postln;
-            s.options.numInputBusChannels = settings["InputBuffers"].postln;
-            s.options.outDevice = settings["OutDevice"].postln;
-            s.options.sampleRate = settings["SampleRate"].postln;
-            s.latency = settings["ServerLatency"].postln;
+            s.options.numBuffers = settings["SampleBuffers"];
+            s.options.memSize = settings["ServerMemory"];
+            s.options.numWireBufs = settings["WireBuffers"];
+            s.options.maxNodes = settings["ServerNodes"];
+            s.options.numOutputBusChannels = settings["OutputBuffers"];
+            s.options.numInputBusChannels = settings["InputBuffers"];
+            s.options.outDevice = settings["OutDevice"];
+            s.options.sampleRate = settings["SampleRate"];
+            s.latency = settings["ServerLatency"];
 
 
 		}, {Exception("There was an issue starting the server");});
