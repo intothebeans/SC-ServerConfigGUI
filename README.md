@@ -10,7 +10,7 @@ This is a simple GUI for configuring the SuperCollider local server and SuperDir
 
 ## Installation
 
-Download the [latest release](https://github.com/intothebeans/SC-ServerConfigGUI/releases/download/v1.0.1/SC-ServerConfigGUI-v.1.0.1.zip), unxip the folder, and evaluate `Quarks.install("path/to/directory")` in SuperCollider.
+Clown or download the code, unzip the folder if necessary, and evaluate `Quarks.install("path/to/directory")` in SuperCollider.
 
 ## Bugs
 
