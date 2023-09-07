@@ -7,7 +7,7 @@ ServerConfigGUI {
 
     *prDraw{arg winWidth = 500;
 		var sampleRates = Dictionary.newFrom(["44.1kHz", 44100, "48kHz", 48000, "96kHz", 96000, "192kHz", 192000]);
-		var outMenu, srMenu, bootButton, killButton, numBuffEntry, wireBuffEntry, nodeEntry, inBuffEntry, outBuffEntry, latencyEntry, saveButton, updateSettings, resetButton, serverMemoryEntry;
+		var outMenu, srMenu, bootButton, killButton, numBuffEntry, wireBuffEntry, nodeEntry, inBuffEntry, outBuffEntry, latencyEntry, saveButton, updateSettings, resetButton, serverMemoryEntry, dropDownSelector;
 
         path = Platform.systemExtensionDir +/+ "server-settings.save";
 
@@ -25,19 +25,20 @@ ServerConfigGUI {
                 settings = Dictionary();
                 temp.do({ |stringPair|
                     var pair = stringPair.split($,);
-                    if(pair[0] == "OutDevice", {settings.add(pair[0] -> pair[1]);});
-                    if(pair[0] == "ServerLatency", {settings.add(pair[0] -> pair[1].asFloat)},
-                        {settings.add(pair[0] -> pair[1].asInteger);}
-                    );
+                    if((pair[0] != "OutDevice") && (pair[0] != "ServerLatency"), {settings.add(pair[0] -> pair[1].asInteger);});
+                    if(pair[0] == "OutDevice", {settings.add(pair[0] -> pair[1]);}, {settings.add(pair[0] -> pair[1].asFloat)});
                 });
             });
         });
+
 		win = Window.new("Select Device & Boot", Rect(200, 200, winWidth, 400), false);
 
         outMenu = PopUpMenu(win, Rect(10, 10, 430, 30)).resize_(2).font_(this.prDefaultFont(10, false)).items_(ServerOptions.outDevices);
+        outMenu.value = outMenu.items.detectIndex({arg item; item == settings["OutDevice"]});
 
 		StaticText.new(win, Rect(10, 105, 100, 20)).font_(this.prDefaultFont(10, false)).string_("Sample Rate");
         srMenu = PopUpMenu(win, Rect(10, 125, 100, 30)).font_(this.prDefaultFont(10, true)).items_(sampleRates.keys.asArray);
+        srMenu.value = srMenu.items.detectIndex({arg item; item == sampleRates.findKeyForValue(settings["SampleRate"]);});
 
         StaticText.new(win, Rect(150, 105, 150, 20)).font_(this.prDefaultFont(10, false)).string_("Sample Buffers");
         numBuffEntry = NumberBox(win, Rect(150, 125, 100, 30)).value_(settings["SampleBuffers"]).clipLo_(1024).font_(this.prDefaultFont(10)).step_(0).scroll_step_(0);
@@ -79,6 +80,7 @@ ServerConfigGUI {
             settings.add("ServerLatency" -> latencyEntry.value);
 
         };
+
 
 
 		bootButton.action = {
