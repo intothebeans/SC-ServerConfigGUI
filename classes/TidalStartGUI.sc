@@ -4,11 +4,11 @@ TidalStartGUI : ServerConfigGUI {
 		var fileList, b3, b4, b5;
 		var path = Platform.systemExtensionDir +/+ "sc-sample-paths.save";
 		super.prDraw(750);
-		fileList = ListView.new(win, Rect(300, 100, 425, 230)).selectionMode_(\extended).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
+		fileList = ListView.new(win, Rect(300, 160, 425, 230)).selectionMode_(\extended).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
 
-		b3 = Button(win, Rect(300,60,140,30)).states_([["Add Path", Color.black, Color.green]]).font_(super.prDefaultFont);
-		b4 = Button(win, Rect(450, 60, 140, 30)).string_("Load Sounds").font_(super.prDefaultFont);
-		b5 = Button(win, Rect(600, 60, 125, 30)).states_([["Remove Path", Color.black, Color.fromHexString("#ef3939")]]).font_(super.prDefaultFont);
+		b3 = Button(win, Rect(300, 120,140,30)).states_([["Add Path", Color.black, Color.green]]).font_(super.prDefaultFont);
+		b4 = Button(win, Rect(450, 120, 140, 30)).string_("Load Sounds").font_(super.prDefaultFont);
+		b5 = Button(win, Rect(600, 120, 125, 30)).states_([["Remove Path", Color.black, Color.fromHexString("#ef3939")]]).font_(super.prDefaultFont);
 
 		if(File.exists(path), {
             samplePaths = File.readAllString(path).split($;); samplePaths.removeAt(samplePaths.size - 1);
