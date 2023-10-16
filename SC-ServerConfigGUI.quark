@@ -1,0 +1,7 @@
+(
+	name: "SC-ServerConfigGUI",
+	summary: "A GUI for starting and configuring the server and TidalCycles",
+	version: "1.1.0",
+	schelp: "ServerConfigGUI",
+	copyright: "Aiden Benton 2023"
+)
