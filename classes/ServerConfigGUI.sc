@@ -77,7 +77,7 @@ ServerConfigGUI {
 		StaticText.new(win, Rect(10, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("Nodes");
 		nodeEntry = NumberBox.new(win, Rect(10, 295, 100, 30)).font_(this.prDefaultFont(10)).value_(settings["ServerNodes"]).clipLo_(1024).step_(0).scroll_step_(0);
 
-		StaticText.new(win, Rect(150, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("In/Out Buffers");
+		StaticText.new(win, Rect(150, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("In/Out Busses");
 		inBuffEntry = NumberBox.new(win, Rect(150, 295, 45, 30)).font_(this.prDefaultFont(10)).value_(settings["InputBuffers"]).step_(0).scroll_step_(0);
 		outBuffEntry = NumberBox.new(win, Rect(205, 295, 45, 30)).font_(this.prDefaultFont(10)).value_(settings["OutputBuffers"]).step_(0).scroll_step_(0);
 
@@ -110,9 +110,9 @@ ServerConfigGUI {
 
 		bootButton.action = {
             updateSettings.value;
-			try{this.prStartServer;}
-			{this.prMessageBox("Error starting the server."); bootButton.value = 0};
+            this.prStartServer;
             win.name_("Out: " + settings["OutDevice"]);
+
 		};
 
 		killButton.action = {Server.default.ifRunning({
@@ -162,22 +162,20 @@ ServerConfigGUI {
 	*prStartServer {
 		var s = Server.default;
 		if(s.serverRunning, {Server.killAll;});
-		s.reboot( {
-			// see http://doc.sccode.org/Classes/ServerOptions.html
-            s.options.numBuffers = settings["SampleBuffers"];
-            s.options.memSize = settings["ServerMemory"];
-            s.options.numWireBufs = settings["WireBuffers"];
-            s.options.maxNodes = settings["ServerNodes"];
-            s.options.numOutputBusChannels = settings["OutputBuffers"];
-            s.options.numInputBusChannels = settings["InputBuffers"];
-            s.options.sampleRate = settings["SampleRate"];
-            s.latency = settings["ServerLatency"];
-            if(settings["InDevice"] != "Default" && settings["OutDevice"] != "Default",
-                {s.options.inDevice = settings["InDevice"];
+        // see http://doc.sccode.org/Classes/ServerOptions.html
+        s.options.numBuffers = settings["SampleBuffers"];
+        s.options.memSize = settings["ServerMemory"];
+        s.options.numWireBufs = settings["WireBuffers"];
+        s.options.maxNodes = settings["ServerNodes"];
+        s.options.sampleRate = settings["SampleRate"];
+        s.latency = settings["ServerLatency"];
+        if(settings["InDevice"] != "Default" && settings["OutDevice"] != "Default",
+            {s.options.inDevice = settings["InDevice"];
             s.options.outDevice = settings["OutDevice"];});
+        s.options.numOutputBusChannels_(numChannels: settings["OutputBuffers"]);
+        s.options.numInputBusChannels_(numChannels: settings["InputBuffers"]);
+        s.boot;
 
-
-		}, {Exception("There was an issue starting the server");});
 	}
 
 	*prMessageBox { arg msg;
