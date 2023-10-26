@@ -7,7 +7,7 @@ ServerConfigGUI {
 
     *prDraw{arg winWidth = 500;
 		var sampleRates = Dictionary.newFrom(["44.1kHz", 44100, "48kHz", 48000, "96kHz", 96000, "192kHz", 192000]);
-		var inMenu, outMenu, srMenu, bootButton, killButton, numBuffEntry, wireBuffEntry, nodeEntry, inBuffEntry, outBuffEntry, latencyEntry, saveButton, updateSettings, resetButton, serverMemoryEntry, dropDownSelector, inList, outList;
+		var inMenu, outMenu, srMenu, bootButton, killButton, numBuffEntry, wireBuffEntry, nodeEntry, latencyEntry, saveButton, updateSettings, resetButton, serverMemoryEntry, dropDownSelector, inList, outList;
 
         path = Platform.systemExtensionDir +/+ "server-settings.save";
 
@@ -77,10 +77,10 @@ ServerConfigGUI {
 		StaticText.new(win, Rect(10, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("Nodes");
 		nodeEntry = NumberBox.new(win, Rect(10, 295, 100, 30)).font_(this.prDefaultFont(10)).value_(settings["ServerNodes"]).clipLo_(1024).step_(0).scroll_step_(0);
 
-		StaticText.new(win, Rect(150, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("In/Out Busses");
+		/*StaticText.new(win, Rect(150, 275, 150, 20)).font_(this.prDefaultFont(10, false)).string_("In/Out Busses");
 		inBuffEntry = NumberBox.new(win, Rect(150, 295, 45, 30)).font_(this.prDefaultFont(10)).value_(settings["InputBuffers"]).step_(0).scroll_step_(0);
 		outBuffEntry = NumberBox.new(win, Rect(205, 295, 45, 30)).font_(this.prDefaultFont(10)).value_(settings["OutputBuffers"]).step_(0).scroll_step_(0);
-
+*/
 		StaticText.new(win, Rect(10, 330, 150, 20)).font_(this.prDefaultFont(10, false)).string_("Server Latency");
 		latencyEntry = NumberBox.new(win, Rect(10, 350, 100, 30)).font_(this.prDefaultFont(10)).value_(settings["ServerLatency"]).step_(0).scroll_step_(0);
 
@@ -98,8 +98,8 @@ ServerConfigGUI {
             settings.add("ServerMemory" -> serverMemoryEntry.value);
             settings.add("WireBuffers" -> wireBuffEntry.value);
             settings.add("ServerNodes"-> nodeEntry.value);
-            settings.add("InputBuffers" -> inBuffEntry.value);
-            settings.add("OutputBuffers"-> outBuffEntry.value);
+            //settings.add("InputBuffers" -> inBuffEntry.value);
+            //settings.add("OutputBuffers"-> outBuffEntry.value);
             settings.add("ServerLatency" -> latencyEntry.value);
             settings.add("OutDevice" -> outMenu.item.asString);
             settings.add("InDevice" -> inMenu.item.asString);
@@ -142,8 +142,8 @@ ServerConfigGUI {
             wireBuffEntry.value = settings["WireBuffers"];
             serverMemoryEntry.value = settings["WireBuffers"];
             nodeEntry.value = settings["ServerNodes"];
-            inBuffEntry.value = settings["InputBuffers"];
-            outBuffEntry.value = settings["OutputBuffers"];
+            //inBuffEntry.value = settings["InputBuffers"];
+            //outBuffEntry.value = settings["OutputBuffers"];
             latencyEntry.value = settings["ServerLatency"];
             outMenu.value = 0;
             srMenu.value = 0;
@@ -160,21 +160,19 @@ ServerConfigGUI {
 	}
 
 	*prStartServer {
-		var s = Server.default;
-		if(s.serverRunning, {Server.killAll;});
-        // see http://doc.sccode.org/Classes/ServerOptions.html
-        s.options.numBuffers = settings["SampleBuffers"];
-        s.options.memSize = settings["ServerMemory"];
-        s.options.numWireBufs = settings["WireBuffers"];
-        s.options.maxNodes = settings["ServerNodes"];
-        s.options.sampleRate = settings["SampleRate"];
-        s.latency = settings["ServerLatency"];
-        if(settings["InDevice"] != "Default" && settings["OutDevice"] != "Default",
-            {s.options.inDevice = settings["InDevice"];
-            s.options.outDevice = settings["OutDevice"];});
-        s.options.numOutputBusChannels_(numChannels: settings["OutputBuffers"]);
-        s.options.numInputBusChannels_(numChannels: settings["InputBuffers"]);
+        var o = ServerOptions.new;
+        var s = Server.default;
+        if(s.serverRunning, {Server.killAll});
+        o.numBuffers_(settings["SampleBuffers"]);
+        o.memSize_(settings["ServerMemory"]);
+        o.numWireBufs_(settings["WireBuffers"]);
+        o.maxNodes_(settings["ServerNodes"]);
+        o.sampleRate_(settings["SampleRate"]);
+       if(settings["InDevice"] != "Default" && settings["OutDevice"] != "Default",
+            {o.inDevice_(settings["InDevice"]); o.outDevice_(settings["OutDevice"]);});
+        s.options_(o);
         s.boot;
+        s.latency_(settings["ServerLatency"]);
 
 	}
 
