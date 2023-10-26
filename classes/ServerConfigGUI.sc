@@ -115,10 +115,9 @@ ServerConfigGUI {
 
 		};
 
-		killButton.action = {Server.default.ifRunning({
+		killButton.action = {
 			Server.killAll; killButton.value = 0; bootButton.value = 0;
-
-		}, {this.prMessageBox("Server Isn't Running"); bootButton.value = 0;});};
+		};
 
         saveButton.action = {
             var f;
