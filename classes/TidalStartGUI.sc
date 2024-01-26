@@ -2,7 +2,7 @@ TidalStartGUI : ServerConfigGUI {
 	classvar samplePaths;
 	*start {
 		var fileList, b3, b4, b5;
-		var path = Platform.systemExtensionDir +/+ "sc-sample-paths.save";
+		var path = Platform.userExtensionDir +/+ "sc-sample-paths.save";
 		super.prDraw(750);
 		fileList = ListView.new(win, Rect(300, 160, 425, 230)).selectionMode_(\extended).font_(super.prDefaultFont(10, false)).colors_(Color.yellow);
 
